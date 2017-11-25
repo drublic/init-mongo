@@ -51,6 +51,22 @@ class InitMongo {
     find(collectionName, query) {
         return this.caller(collectionName, () => this.findCallee(query));
     }
+    updateCallee(elements) {
+        return new Promise((resolve, reject) => {
+            this.collection.updateMany(elements, (error, result) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
+        });
+    }
+    update(collectionName, elements) {
+        if (elements.constructor !== Array) {
+            elements = [elements];
+        }
+        return this.caller(collectionName, () => this.updateCallee(elements));
+    }
 }
 exports.default = InitMongo;
 //# sourceMappingURL=index.js.map

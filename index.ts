@@ -69,6 +69,26 @@ class InitMongo {
     return this.caller(collectionName, () => this.findCallee(query))
   }
 
+  private updateCallee(elements: object[] | object) {
+    return new Promise((resolve, reject) => {
+      this.collection.updateMany(elements, (error, result) => {
+        if (error) {
+          return reject(error)
+        }
+
+        return resolve(result)
+      })
+    })
+  }
+
+  public update(collectionName: string, elements: object[] | object) {
+    if (elements.constructor !== Array) {
+      elements = [elements]
+    }
+
+    return this.caller(collectionName, () => this.updateCallee(elements))
+  }
+
 }
 
 export default InitMongo
