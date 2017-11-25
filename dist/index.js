@@ -51,9 +51,10 @@ class InitMongo {
     find(collectionName, query) {
         return this.caller(collectionName, () => this.findCallee(query));
     }
-    updateCallee(element) {
+    deleteCallee(elements) {
         return new Promise((resolve, reject) => {
-            this.collection.updateOne({ id: element.id }, { $set: element }, (error, result) => {
+            const ids = elements.map((element) => ({ id: element.id }));
+            this.collection.deleteMany(ids, (error, result) => {
                 if (error) {
                     return reject(error);
                 }
@@ -61,8 +62,18 @@ class InitMongo {
             });
         });
     }
+    delete(collectionName, elements) {
+        if (elements.constructor !== Array) {
+            elements = [elements];
+        }
+        return this.caller(collectionName, () => this.deleteCallee(elements));
+    }
     update(collectionName, element) {
-        return this.caller(collectionName, () => this.updateCallee(element));
+        return this
+            .caller(collectionName, () => {
+            this.deleteCallee(element);
+            this.insertCallee([element]);
+        });
     }
 }
 exports.default = InitMongo;

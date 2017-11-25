@@ -69,9 +69,11 @@ class InitMongo {
     return this.caller(collectionName, () => this.findCallee(query))
   }
 
-  private updateCallee(element: any | object) {
+  private deleteCallee(elements: any) {
     return new Promise((resolve, reject) => {
-      this.collection.updateOne({ id: element.id }, { $set: element }, (error, result) => {
+      const ids = elements.map((element) => ({ id: element.id }))
+
+      this.collection.deleteMany(ids, (error, result) => {
         if (error) {
           return reject(error)
         }
@@ -81,8 +83,20 @@ class InitMongo {
     })
   }
 
-  public update(collectionName: string, element: object | object) {
-    return this.caller(collectionName, () => this.updateCallee(element))
+  public delete(collectionName: string, elements: object[] | object) {
+    if (elements.constructor !== Array) {
+      elements = [elements]
+    }
+
+    return this.caller(collectionName, () => this.deleteCallee(elements))
+  }
+
+  public update(collectionName: string, element: object) {
+    return this
+      .caller(collectionName, () => {
+        this.deleteCallee(element)
+        this.insertCallee([element])
+      })
   }
 
 }
