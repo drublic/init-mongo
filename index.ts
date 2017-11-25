@@ -93,9 +93,9 @@ class InitMongo {
 
   public update(collectionName: string, element: object) {
     return this
-      .caller(collectionName, () => {
-        this.deleteCallee(element)
-        this.insertCallee([element])
+      .caller(collectionName, () => this.deleteCallee(element))
+      .then(() => {
+        return this.caller(collectionName, () => this.insertCallee([element]))
       })
   }
 
