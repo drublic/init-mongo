@@ -53,8 +53,8 @@ class InitMongo {
     }
     deleteCallee(elements) {
         return new Promise((resolve, reject) => {
-            const ids = elements.map((element) => ({ id: element.id }));
-            this.collection.deleteMany(ids, (error, result) => {
+            const element = elements[0];
+            this.collection.deleteOne({ id: element.id }, (error, result) => {
                 if (error) {
                     return reject(error);
                 }
@@ -71,8 +71,8 @@ class InitMongo {
     update(collectionName, element) {
         return this
             .caller(collectionName, () => {
-            this.deleteCallee(element);
-            this.insertCallee([element]);
+            return this.deleteCallee([element])
+                .then(() => this.insertCallee([element]));
         });
     }
 }
