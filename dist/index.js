@@ -22,6 +22,9 @@ class InitMongo {
             });
         });
     }
+    /**
+     * Insert
+     */
     insertCallee(elements) {
         return new Promise((resolve, reject) => {
             this.collection.insertMany(elements, (error, result) => {
@@ -38,6 +41,9 @@ class InitMongo {
         }
         return this.caller(collectionName, () => this.insertCallee(elements));
     }
+    /**
+     * Find
+     */
     findCallee(query) {
         return new Promise((resolve, reject) => {
             this.collection.find(query).toArray((error, result) => {
@@ -51,6 +57,9 @@ class InitMongo {
     find(collectionName, query) {
         return this.caller(collectionName, () => this.findCallee(query));
     }
+    /**
+     * Delete
+     */
     deleteCallee(elements) {
         return new Promise((resolve, reject) => {
             const element = elements[0];
@@ -68,12 +77,21 @@ class InitMongo {
         }
         return this.caller(collectionName, () => this.deleteCallee(elements));
     }
-    update(collectionName, element) {
-        return this
-            .caller(collectionName, () => {
-            return this.deleteCallee([element])
-                .then(() => this.insertCallee([element]));
+    /**
+     * Update
+     */
+    updateCallee(element) {
+        return new Promise((resolve, reject) => {
+            this.collection.updateOne({ id: element.id }, (error, result) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(result);
+            });
         });
+    }
+    update(collectionName, element) {
+        return this.caller(collectionName, () => this.updateCallee([element]));
     }
 }
 exports.default = InitMongo;
