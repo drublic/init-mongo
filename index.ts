@@ -33,6 +33,9 @@ class InitMongo {
     })
   }
 
+  /**
+   * Insert
+   */
   private insertCallee(elements: object[] | object) {
     return new Promise((resolve, reject) => {
       this.collection.insertMany(elements, (error, result) => {
@@ -53,6 +56,9 @@ class InitMongo {
     return this.caller(collectionName, () => this.insertCallee(elements))
   }
 
+  /**
+   * Find
+   */
   private findCallee(query: object) {
     return new Promise((resolve, reject) => {
       this.collection.find(query).toArray((error, result) => {
@@ -69,6 +75,9 @@ class InitMongo {
     return this.caller(collectionName, () => this.findCallee(query))
   }
 
+  /**
+   * Delete
+   */
   private deleteCallee(elements: any) {
     return new Promise((resolve, reject) => {
       const element = elements[0]
@@ -91,14 +100,24 @@ class InitMongo {
     return this.caller(collectionName, () => this.deleteCallee(elements))
   }
 
-  public update(collectionName: string, element: object) {
-    return this
-      .caller(collectionName, () => {
-        return this.deleteCallee([element])
-          .then(() => this.insertCallee([element]))
+  /**
+   * Update
+   */
+  private updateCallee(element: any) {
+    return new Promise((resolve, reject) => {
+      this.collection.updateOne({ id: element.id }, (error, result) => {
+        if (error) {
+          return reject(error)
+        }
+
+        return resolve(result)
       })
+    })
   }
 
+  public update(collectionName: string, element: object) {
+    return this.caller(collectionName, () => this.updateCallee([element]))
+  }
 }
 
 export default InitMongo
