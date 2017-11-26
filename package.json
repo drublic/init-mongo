@@ -1,7 +1,7 @@
 {
   "name": "init-mongo",
   "version": "0.4.1",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "author": "Hans Christian Reinl <info@drublic.de>",
   "license": "MIT",
   "dependencies": {
