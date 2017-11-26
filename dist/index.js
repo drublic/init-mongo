@@ -82,7 +82,7 @@ class InitMongo {
      */
     updateCallee(element) {
         return new Promise((resolve, reject) => {
-            this.collection.updateOne({ id: element.id }, { $set: element }, (error, result) => {
+            this.collection.update({ id: element.id }, element, (error, result) => {
                 if (error) {
                     return reject(error);
                 }
