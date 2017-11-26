@@ -91,7 +91,7 @@ class InitMongo {
         });
     }
     update(collectionName, element) {
-        return this.caller(collectionName, () => this.updateCallee([element]));
+        return this.caller(collectionName, () => this.updateCallee(element));
     }
 }
 exports.default = InitMongo;

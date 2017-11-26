@@ -116,7 +116,7 @@ class InitMongo {
   }
 
   public update(collectionName: string, element: object) {
-    return this.caller(collectionName, () => this.updateCallee([element]))
+    return this.caller(collectionName, () => this.updateCallee(element))
   }
 }
 
